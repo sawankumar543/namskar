@@ -6,6 +6,7 @@ import cors from 'cors';
 import { clerkMiddleware } from '@clerk/express'
 import path from 'node:path';
 import fs from 'node:fs'; // 👈 यह लाइन गायब थी, इसे अब जोड़ दिया गया है
+import job from './lib/cron.js';
 
 // make app
 const app = express()
@@ -18,11 +19,11 @@ app.use(clerkMiddleware())
 app.use(express.json())
 app.use(cors({ origin: FRONTEND_URL, credentials: true} ))
 
-// app.get('/', (req, res) => {
-//     res.status(200).json({
-//         success: true,
-//     })
-// })
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        success: true,
+    })
+})
 
 if(fs.existsSync(publicDir)) {
     app.use(express.static(publicDir))
@@ -35,4 +36,7 @@ if(fs.existsSync(publicDir)) {
 app.listen(PORT, () => {
     connectDB();
     console.log("Server is running upon", PORT);
+    if(process.env.NODE_ENV === "production") {
+        job.start()
+    }
 })
