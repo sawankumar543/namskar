@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 if(fs.existsSync(publicDir)) {
     app.use(express.static(publicDir))
     // नोट: यहाँ राउटर को वाइल्डकार्ड के लिए '*' लिखा जाता है
-    app.get("*", (req, res) => {
+    app.get("*any", (req, res) => {
         res.sendFile(path.join(publicDir, "index.html"))
     })
 }
