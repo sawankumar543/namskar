@@ -5,12 +5,12 @@ import dns from 'node:dns/promises'
 import cors from 'cors';
 import { clerkMiddleware } from '@clerk/express'
 import path from 'node:path';
-import { join } from 'path';
+import fs from 'node:fs'; // 👈 यह लाइन गायब थी, इसे अब जोड़ दिया गया है
 
 // make app
 const app = express()
 dns.setServers(['1.1.1.1', '8.8.8.8']);
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 10000; // Render के लिए डिफ़ॉल्ट पोर्ट बैकअप
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const publicDir = path.join(process.cwd(), "public")
 
@@ -19,7 +19,6 @@ app.use(express.json())
 app.use(cors({ origin: FRONTEND_URL, credentials: true} ))
 
 app.get('/', (req, res) => {
-    const {message, image, video} = req.body
     res.status(200).json({
         success: true,
     })
@@ -27,12 +26,11 @@ app.get('/', (req, res) => {
 
 if(fs.existsSync(publicDir)) {
     app.use(express.static(publicDir))
-    app.get("/{*any}", (req, res, next) => {
-        res.sendFile(path.join(publicDir, "index.html", (err) => next(err)))
+    // नोट: यहाँ राउटर को वाइल्डकार्ड के लिए '*' लिखा जाता है
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(publicDir, "index.html"))
     })
 }
-
-
 
 app.listen(PORT, () => {
     connectDB();
