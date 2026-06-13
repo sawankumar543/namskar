@@ -4,7 +4,8 @@ import { connectDB } from './lib/db.js';
 import dns from 'node:dns/promises'
 import cors from 'cors';
 import { clerkMiddleware } from '@clerk/express'
-import path from 'node:path'; 
+import path from 'node:path';
+import { join } from 'path';
 
 // make app
 const app = express()
