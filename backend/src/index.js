@@ -18,11 +18,11 @@ app.use(clerkMiddleware())
 app.use(express.json())
 app.use(cors({ origin: FRONTEND_URL, credentials: true} ))
 
-app.get('/', (req, res) => {
-    res.status(200).json({
-        success: true,
-    })
-})
+// app.get('/', (req, res) => {
+//     res.status(200).json({
+//         success: true,
+//     })
+// })
 
 if(fs.existsSync(publicDir)) {
     app.use(express.static(publicDir))
